@@ -3,24 +3,21 @@ var glassesType = "";
 var currentTl = "";
 var glassesNameElement = document.querySelector(".glasses-name");
 var glassesTypeElement = document.querySelector(".glasses-type");
+var playedIntro = false;
 
 // timelines
 var introTl = new TimelineMax({ paused: true });
 var wesTl = new TimelineMax({
 	paused: true,
-	delay: 3,
 });
 var hudsonTl = new TimelineMax({
 	paused: true,
-	delay: 3,
 });
 var pierceTl = new TimelineMax({
 	paused: true,
-	delay: 3,
 });
 var titleTl = new TimelineMax({
 	paused: true,
-	delay: 2.5,
 });
 
 introTl.from("#main", 2, {
@@ -83,8 +80,6 @@ document.addEventListener('keydown', function(event) {
 function setText(name, type) {
 	glassesName = name;
 	glassesType = type;
-	glassesNameElement.innerHTML = glassesName;
-	glassesTypeElement.innerHTML = glassesType;
 }
 
 function startTl(tl) {
@@ -93,10 +88,27 @@ function startTl(tl) {
 	glassesTl.forEach(function(x) {
 		if (x.progress() == 1 || x.isActive()) {
 			x.reverse();
+			titleTl.reverse();
+			x.eventCallback("onReverseComplete", function() {
+				tl.play();
+				titleTl.play();
+				glassesNameElement.innerHTML = glassesName;
+				glassesTypeElement.innerHTML = glassesType;
+			});
 		}
 	});
 
-	introTl.play();
-	tl.play();
-	titleTl.play();
+	if (!playedIntro) {
+		tl.delay(2);
+		titleTl.delay(2);
+
+		introTl.play();
+		tl.play();
+		titleTl.play();
+
+		glassesNameElement.innerHTML = glassesName;
+		glassesTypeElement.innerHTML = glassesType;
+
+		playedIntro = !playedIntro;
+	}
 }
