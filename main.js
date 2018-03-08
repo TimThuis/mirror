@@ -5,6 +5,8 @@ var glassesNameElement = document.querySelector(".glasses-name");
 var glassesTypeElement = document.querySelector(".glasses-type");
 var playedIntro = false;
 
+alert("press '1', '2' or '3' to start the different kind of animations")
+
 // timelines
 var introTl = new TimelineMax({ paused: true });
 var wesTl = new TimelineMax({
