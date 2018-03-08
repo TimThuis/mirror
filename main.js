@@ -5,56 +5,57 @@ var glassesNameElement = document.querySelector(".glasses-name");
 var glassesTypeElement = document.querySelector(".glasses-type");
 
 // timelines
-var mainTl = new TimelineMax({ paused: true });
-var wesTl = new TimelineMax({ paused: true });
-var hudsonTl = new TimelineMax({ paused: true });
-var pierceTl = new TimelineMax({ paused: true });
+var introTl = new TimelineMax({ paused: true });
+var wesTl = new TimelineMax({
+	paused: true,
+	delay: 3,
+});
+var hudsonTl = new TimelineMax({
+	paused: true,
+	delay: 3,
+});
+var pierceTl = new TimelineMax({
+	paused: true,
+	delay: 3,
+});
+var titleTl = new TimelineMax({
+	paused: true,
+	delay: 2.5,
+});
 
-mainTl.from("#main", 2, {
+introTl.from("#main", 2, {
 	opacity: 0,
 	ease: Power0.easeNone,
-}, "startTimeline")
-.add(function(){
-	switch (currentTl) {
-		case "wes":
-			wesTl.play();
-			break;
-		case "hudson":
-			hudsonTl.play();
-			break;
-		case "pierce":
-			pierceTl.play();
-			break;
-	}
-}, "startTimeline+=2")
-.staggerFromTo(".container-text p", 0.75,{
-	height: "0px",
-}, {
-	height: "71px",
-}, 0.5, "startTimeline+= 2");
+});
 
 wesTl.staggerFromTo([".marbled",".tiger",".gold",".lime"], 1.5, {
 		rotation: -30,
 	},{
   cycle:{
-	    rotation:[18,6,-6,-18],
+	    rotation:[18,6,-6,-18]
 	  }
-}, 0.5);
+}, 0.50);
 
 hudsonTl.staggerFromTo([".havana",".caramel-havana",".caramel",".tiger-wood"], 1.5, {
 		rotation: -30,
 	},{
   cycle:{
-	    rotation:[18,6,-6,-18],
+	    rotation:[18,6,-6,-18]
 	  }
-}, 0.5);
+}, 0.50);
 
 pierceTl.staggerFromTo([".pierce-tiger",".orchied",".champagne",".chocolate", ".taupe"], 1.5, {
 		rotation: -30,
 	},{
   cycle:{
-	    rotation:[30,18,6,-6,-18],
+	    rotation:[30,18,6,-6,-18]
 	  }
+}, 0.50);
+
+titleTl.staggerFromTo(".container-text p", 0.75,{
+	height: "0px",
+}, {
+	height: "71px",
 }, 0.5);
 
 document.addEventListener('keydown', function(event) {
@@ -62,21 +63,20 @@ document.addEventListener('keydown', function(event) {
 		case "Digit1":
 			console.log("timeline one Wes");
 			setText("Bart", "Yellow Gold");
-			setTimeline("wes");
+			startTl(wesTl);
 			break;
 		case "Digit2":
 			console.log("timeline two Hudson");
 			setText("Felix", "Sunny Black");
-			setTimeline("hudson");
+			startTl(hudsonTl);
 			break;
 		case "Digit3":
 			console.log("timeline tree Pierce");
 			setText("Anna", "See Through");
-			setTimeline("pierce");
+			startTl(pierceTl);
 			break;
 		default:
 			console.log(event.code);
-
 	}
 });
 
@@ -87,7 +87,16 @@ function setText(name, type) {
 	glassesTypeElement.innerHTML = glassesType;
 }
 
-function setTimeline(tl) {
-	currentTl = tl;
-	mainTl.play();
+function startTl(tl) {
+
+	glassesTl = [wesTl, hudsonTl, pierceTl];
+	glassesTl.forEach(function(x) {
+		if (x.progress() == 1 || x.isActive()) {
+			x.reverse();
+		}
+	});
+
+	introTl.play();
+	tl.play();
+	titleTl.play();
 }
